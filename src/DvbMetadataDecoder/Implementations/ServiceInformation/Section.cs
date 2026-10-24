@@ -1,0 +1,49 @@
+using System;
+using DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
+using Kreisverkehr.DvbMetadataDecoder;
+
+namespace DvbMetadataDecoder.Implementations.ServiceInformation;
+
+internal abstract class Section : IServiceInformationSection
+{
+    private readonly byte _tableId;
+    protected readonly ushort _sectionLength;
+    private readonly ushort _transportStreamId;
+    private readonly byte _versionNumber;
+    private readonly bool _currentNextIndicator;
+    private readonly byte _sectionNumber;
+    private readonly byte _lastSectionNumber;
+
+    internal Section(ReadOnlySpan<byte> data)
+    {
+        _tableId = data[0];
+        _sectionLength = (ushort)(((data[1] & 0b00001111) << 8) | data[2]);
+        _transportStreamId = (ushort)((data[3] << 8) | data[4]);
+        _versionNumber = (byte)((data[5] & 0b00111110) >> 1);
+        _currentNextIndicator = (data[5] & 0b00000001) != 0;
+        _sectionNumber = data[6];
+        _lastSectionNumber = data[7];
+    }
+
+    protected ReadOnlySpan<byte> GetDataPart(ReadOnlySpan<byte> data) => data[8..(_sectionLength - 1)];
+    
+    internal static Section CreateSection(ushort pid, ReadOnlySpan<byte> data) => pid switch
+    {
+        0x00 => new ProgramAssociationSection(data),
+        _ => new UnknownSection(data)
+    };
+
+    public byte TableId => _tableId;
+    public ushort TransportStreamId => _transportStreamId;
+    public byte VersionNumber => _versionNumber;
+    public bool IsCurrent => _currentNextIndicator;
+    public byte SectionNumber => _sectionNumber;
+    public byte LastSectionNumber => _lastSectionNumber;
+}
+
+internal class UnknownSection : Section
+{
+    public UnknownSection(ReadOnlySpan<byte> data) : base(data)
+    {
+    }
+}

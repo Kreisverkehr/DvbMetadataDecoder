@@ -2,7 +2,7 @@ using System.Threading.Channels;
 
 namespace Kreisverkehr.DvbMetadataDecoder;
 
-public interface IServiceInformationTableFactory
+public interface IServiceInformationSectionFactory
 {
-    ChannelReader<IServiceInformationTable> Subscribe();
+    ChannelReader<IServiceInformationSection> Subscribe();
 }

@@ -9,6 +9,6 @@ public static class SsdpServiceCollectionExtensions
     public static IServiceCollection AddDvbMetadataDecoder(this IServiceCollection services) => services
         .AddScoped<IDvbMetadataDecoder, Kreisverkehr.DvbMetadataDecoder.DvbMetadataDecoder>()
         .AddScoped<ITransportStreamPackageFactory, PackageFactory>()
-        .AddScoped<IServiceInformationTableFactory, TableFactory>()
+        .AddScoped<IServiceInformationSectionFactory, SectionFactory>()
         ;
 }

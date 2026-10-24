@@ -4,15 +4,15 @@ using Microsoft.VisualBasic;
 
 namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation;
 
-internal class TableFactory : IServiceInformationTableFactory, IAsyncDisposable
+internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposable
 {
-    private readonly List<Channel<IServiceInformationTable>> _subscribers = [];
+    private readonly List<Channel<IServiceInformationSection>> _subscribers = [];
     private readonly ChannelReader<ITransportStreamPackage> _packageSubscription;
     private readonly ITransportStreamPackageFactory _packageFactory;
     private readonly Task _worker;
     private readonly Dictionary<ushort, SectionAssembler> _assemblers = [];
 
-    public TableFactory(ITransportStreamPackageFactory packageFactory)
+    public SectionFactory(ITransportStreamPackageFactory packageFactory)
     {
         _packageFactory = packageFactory;
         _packageSubscription = _packageFactory.Subscribe();
@@ -30,9 +30,9 @@ internal class TableFactory : IServiceInformationTableFactory, IAsyncDisposable
 
     private async Task ProcessSection(ushort pid, ReadOnlyMemory<byte> sectionData)
     {
-        Table table = Table.CreateTable(pid, sectionData.Span);
+        Section section = Section.CreateSection(pid, sectionData.Span);
         foreach(var subscriber in _subscribers)
-            await subscriber.Writer.WriteAsync(table);
+            await subscriber.Writer.WriteAsync(section);
     }
 
     private SectionAssembler GetAssembler(ushort pid)
@@ -51,9 +51,9 @@ internal class TableFactory : IServiceInformationTableFactory, IAsyncDisposable
         return ValueTask.CompletedTask;
     }
 
-    public ChannelReader<IServiceInformationTable> Subscribe()
+    public ChannelReader<IServiceInformationSection> Subscribe()
     {
-        var subscriber = Channel.CreateUnbounded<IServiceInformationTable>(new()
+        var subscriber = Channel.CreateUnbounded<IServiceInformationSection>(new()
         {
             SingleWriter = true,
             AllowSynchronousContinuations = true
