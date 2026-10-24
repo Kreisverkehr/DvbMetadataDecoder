@@ -12,6 +12,7 @@ IServiceProvider sp = new ServiceCollection()
 await using var scope = sp.CreateAsyncScope();
 
 var factory = scope.ServiceProvider.GetRequiredService<ITransportStreamPackageFactory>();
+var reader = factory.Subscribe();
 
 ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync("Samples/testdata.ts");
 data = data[..(1000 * 188)];
@@ -20,7 +21,7 @@ var feedTask = factory.FeedAsync(data);
 var packageCount = data.Length / 188;
 for (var index = 0; index < packageCount; index++)
 {
-    var package = await factory.ReadAsync();
+    var package = await reader.ReadAsync();
     Console.WriteLine(
         $"Packet {index + 1:00000000}: PID=0x{package.PacketIdentifier:X4} ({package.PacketIdentifier}), " +
         $"TEI={package.TransportErrorIndicator}, " +

@@ -7,8 +7,13 @@ public interface IDvbMetadataDecoder
 
 public class DvbMetadataDecoder : IDvbMetadataDecoder
 {
-    public async ValueTask FeedAsync(ReadOnlyMemory<byte> data)
+    private readonly ITransportStreamPackageFactory _pkgFactory;
+
+    public DvbMetadataDecoder(ITransportStreamPackageFactory pkgFactory)
     {
-        throw new NotImplementedException();
+        _pkgFactory = pkgFactory;
     }
+
+    public ValueTask FeedAsync(ReadOnlyMemory<byte> data) =>
+        _pkgFactory.FeedAsync(data);
 }
