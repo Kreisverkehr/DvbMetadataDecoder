@@ -26,10 +26,11 @@ internal abstract class Section : IServiceInformationSection
     }
 
     protected ReadOnlySpan<byte> GetDataPart(ReadOnlySpan<byte> data) => data[8..(_sectionLength - 1)];
-    
+
     internal static Section CreateSection(ushort pid, ReadOnlySpan<byte> data) => pid switch
     {
         0x00 => new ProgramAssociationSection(data),
+        0x02 => new ProgramMapSection(data),
         _ => new UnknownSection(data)
     };
 
@@ -41,9 +42,12 @@ internal abstract class Section : IServiceInformationSection
     public byte LastSectionNumber => _lastSectionNumber;
 }
 
-internal class UnknownSection : Section
+internal class UnknownSection : Section, IUnknownSection
 {
     public UnknownSection(ReadOnlySpan<byte> data) : base(data)
     {
+        SectionData = data.ToArray();
     }
+
+    public ReadOnlyMemory<byte> SectionData { get; private set; }
 }
