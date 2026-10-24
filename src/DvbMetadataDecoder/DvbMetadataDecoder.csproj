@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Kreisverkehr.DvbMetadataDecoder</PackageId>
+    <Title>DvbMetadataDecoder</Title>
+    <Description>DvbMetadataDecoder is a .NET library for decoding metadata from DVB transport streams.</Description>
+    <Summary>Library for decoding DVB metadata.</Summary>
+    <Version>0.0.0</Version>
+    <Authors>Kreisverkehr</Authors>
+    <Company>Kreisverkehr</Company>
+    <Copyright>Copyright (c) 2026 Kreisverkehr</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Kreisverkehr/DvbMetadataDecoder</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>
