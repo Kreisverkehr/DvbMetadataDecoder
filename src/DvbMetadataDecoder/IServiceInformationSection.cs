@@ -42,3 +42,8 @@ public interface IProgramMapSection : IServiceInformationSection
         IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
     }
 }
+
+public interface ITransportStreamDescriptionSection : IServiceInformationSection
+{
+    IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+}
