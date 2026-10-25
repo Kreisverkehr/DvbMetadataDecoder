@@ -1,6 +1,7 @@
 #:project ../src/DvbMetadataDecoder/DvbMetadataDecoder.csproj
 #:package Microsoft.Extensions.DependencyInjection@10.0.*
 
+using System.IO.Pipes;
 using Kreisverkehr.DvbMetadataDecoder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,9 +23,11 @@ var feederTask = decoder.FeedAsync(data).AsTask().ContinueWith(async _ =>
         await scope.DisposeAsync();
     });
 
-while (await sectionReader.WaitToReadAsync() && sectionReader.TryRead(out var section))
+while (await sectionReader.WaitToReadAsync() && sectionReader.TryRead(out var sectionData))
 {
     // Console.WriteLine($"{section.GetType()}: {section.TableId:X2}");
+
+    (ushort pid, var section) = sectionData;
 
     if(section is IProgramAssociationSection patSection)
     {

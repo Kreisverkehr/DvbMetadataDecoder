@@ -15,7 +15,7 @@ internal class ProgramAssociationSection : Section, IProgramAssociationSection
         foreach (var chunk in bodyData.Chunk(4))
         {
             ushort progNum = (ushort)((chunk[0] << 8) | chunk[1]);
-            ushort pid = (ushort)(((chunk[0] & 0b00011111) << 8) | chunk[1]);
+            ushort pid = (ushort)(((chunk[2] & 0b00011111) << 8) | chunk[3]);
 
             if (progNum == 0)
                 _networkPids.Add(pid);

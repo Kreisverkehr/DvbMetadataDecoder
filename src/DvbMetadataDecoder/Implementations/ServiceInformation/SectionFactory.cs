@@ -1,19 +1,25 @@
 using System.Threading.Channels;
 using DvbMetadataDecoder.Implementations.ServiceInformation;
+using DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 
 namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation;
 
 internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposable
 {
-    private readonly List<Channel<IServiceInformationSection>> _subscribers = [];
+    private readonly List<Channel<(ushort Pid, IServiceInformationSection Section)>> _subscribers = [];
     private readonly ChannelReader<ITransportStreamPackage> _packageSubscription;
+    private readonly Lazy<IDvbMetadataRepository> _respository;
     private readonly ITransportStreamPackageFactory _packageFactory;
     private readonly Task _worker;
     private readonly Dictionary<ushort, SectionAssembler> _assemblers = [];
 
-    public SectionFactory(ITransportStreamPackageFactory packageFactory)
+    private IEnumerable<ushort> ProgramMapPids => _respository.Value.ProgramAssociationTable.ProgramMapPids;
+
+    public SectionFactory(ITransportStreamPackageFactory packageFactory, IServiceProvider provider)
     {
+        _respository = new(provider.GetRequiredService<IDvbMetadataRepository>);
         _packageFactory = packageFactory;
         _packageSubscription = _packageFactory.Subscribe();
         _worker = ProcessPackages();
@@ -23,16 +29,34 @@ internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposa
     {
         while (await _packageSubscription.WaitToReadAsync(cancellationToken) && _packageSubscription.TryRead(out var pkg))
         {
-            if ((pkg.PacketIdentifier >= 0x10 && pkg.PacketIdentifier <= 0x1F) || pkg.PacketIdentifier <= 0x3)
+            if ((pkg.PacketIdentifier >= 0x10 && pkg.PacketIdentifier <= 0x1F) || pkg.PacketIdentifier <= 0x3 || ProgramMapPids.Contains(pkg.PacketIdentifier))
                 GetAssembler(pkg.PacketIdentifier).Process(pkg);
         }
     }
 
     private async Task ProcessSection(ushort pid, ReadOnlyMemory<byte> sectionData)
     {
-        Section section = Section.CreateSection(pid, sectionData.Span);
+        var tableId = sectionData.Span[0];
+
+        if(pid == 0x00 && tableId == 0x00)
+        {
+            await BroadcastNewSection(pid, new ProgramAssociationSection(sectionData.Span));
+            return;
+        }
+
+        if(tableId == 0x02 && ProgramMapPids.Contains(pid))
+        {
+            await BroadcastNewSection(pid, new ProgramMapSection(sectionData.Span));
+            return;
+        }
+
+        await BroadcastNewSection(pid, new UnknownSection(sectionData.Span));
+    }
+
+    private async Task BroadcastNewSection(ushort pid, Section section)
+    {
         foreach(var subscriber in _subscribers)
-            await subscriber.Writer.WriteAsync(section);
+            await subscriber.Writer.WriteAsync((pid, section));
     }
 
     private SectionAssembler GetAssembler(ushort pid)
@@ -51,9 +75,9 @@ internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposa
         return ValueTask.CompletedTask;
     }
 
-    public ChannelReader<IServiceInformationSection> Subscribe()
+    public ChannelReader<(ushort Pid, IServiceInformationSection Section)> Subscribe()
     {
-        var subscriber = Channel.CreateUnbounded<IServiceInformationSection>(new()
+        var subscriber = Channel.CreateUnbounded<(ushort Pid, IServiceInformationSection Section)>(new()
         {
             SingleWriter = true,
             AllowSynchronousContinuations = true

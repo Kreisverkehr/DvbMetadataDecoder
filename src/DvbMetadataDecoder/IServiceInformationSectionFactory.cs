@@ -4,5 +4,5 @@ namespace Kreisverkehr.DvbMetadataDecoder;
 
 public interface IServiceInformationSectionFactory
 {
-    ChannelReader<IServiceInformationSection> Subscribe();
+    ChannelReader<(ushort Pid, IServiceInformationSection Section)> Subscribe();
 }

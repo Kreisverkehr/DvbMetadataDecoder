@@ -16,13 +16,13 @@ internal class ProgramMapSection : Section, IProgramMapSection
 
         _pcrPid = (ushort)(((bodyData[0] & 0b00011111) << 8) | bodyData[1]);
         _programInfoLength = (ushort)(((bodyData[2] & 0b00001111) << 8) | bodyData[3]);
-        Descriptor.AddDescriptors(data.Slice(4, _programInfoLength), _descriptors);
+        Descriptor.AddDescriptors(bodyData.Slice(4, _programInfoLength), _descriptors);
 
         int startOfItem = _programInfoLength + 4;
-        while(startOfItem < data.Length)
+        while(startOfItem < bodyData.Length)
         {
-            int itemLength = (ushort)(((data[startOfItem + 3] & 0b00001111) << 8) | data[startOfItem + 4]) + 5;
-            _entries.Add(new Entry(data.Slice(startOfItem, itemLength)));
+            int itemLength = (ushort)(((bodyData[startOfItem + 3] & 0b00001111) << 8) | bodyData[startOfItem + 4]) + 5;
+            _entries.Add(new Entry(bodyData.Slice(startOfItem, itemLength)));
             startOfItem += itemLength;
         }
     }
