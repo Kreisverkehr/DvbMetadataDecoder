@@ -12,6 +12,8 @@ internal class ProgramMapSection : Section, IProgramMapSection
 
     public ProgramMapSection(ReadOnlySpan<byte> data) : base(data)
     {
+        ProgramNumber = (ushort)((data[3] << 8) | data[4]);
+
         var bodyData = GetDataPart(data);
 
         _pcrPid = (ushort)(((bodyData[0] & 0b00011111) << 8) | bodyData[1]);
@@ -19,7 +21,7 @@ internal class ProgramMapSection : Section, IProgramMapSection
         Descriptor.AddDescriptors(bodyData.Slice(4, _programInfoLength), _descriptors);
 
         int startOfItem = _programInfoLength + 4;
-        while(startOfItem < bodyData.Length)
+        while (startOfItem < bodyData.Length)
         {
             int itemLength = (ushort)(((bodyData[startOfItem + 3] & 0b00001111) << 8) | bodyData[startOfItem + 4]) + 5;
             _entries.Add(new Entry(bodyData.Slice(startOfItem, itemLength)));
@@ -27,6 +29,8 @@ internal class ProgramMapSection : Section, IProgramMapSection
         }
     }
 
+    public ushort ProgramNumber { get; private set; }
+    public ushort PcrPid => _pcrPid;
     public IReadOnlyCollection<IServiceInformationDescriptor> Descriptors => _descriptors.AsReadOnly();
     public IReadOnlyCollection<IProgramMapSection.IEntry> Entries => _entries.AsReadOnly();
 

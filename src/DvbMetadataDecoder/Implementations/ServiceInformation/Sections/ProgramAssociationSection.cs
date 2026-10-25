@@ -10,6 +10,8 @@ internal class ProgramAssociationSection : Section, IProgramAssociationSection
 
     public ProgramAssociationSection(ReadOnlySpan<byte> data) : base(data)
     {
+        TransportStreamId = (ushort)((data[3] << 8) | data[4]);
+
         var bodyData = GetDataPart(data);
 
         foreach (var chunk in bodyData.Chunk(4))
@@ -27,4 +29,6 @@ internal class ProgramAssociationSection : Section, IProgramAssociationSection
     public IReadOnlyCollection<ushort> NetworkPids => _networkPids.AsReadOnly();
 
     public IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations => _pidAssociations.AsReadOnly();
+
+    public ushort TransportStreamId { get; private set; }
 }
