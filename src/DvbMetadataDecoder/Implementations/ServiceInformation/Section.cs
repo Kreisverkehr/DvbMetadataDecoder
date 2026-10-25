@@ -1,8 +1,8 @@
 using System;
-using DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
+using Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
 using Kreisverkehr.DvbMetadataDecoder;
 
-namespace DvbMetadataDecoder.Implementations.ServiceInformation;
+namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation;
 
 internal abstract class Section : IServiceInformationSection
 {

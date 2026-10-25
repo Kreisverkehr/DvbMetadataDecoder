@@ -23,6 +23,11 @@ public interface IProgramAssociationSection : IServiceInformationSection
     IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations { get; }
 }
 
+public interface IConditionalAccessSection : IServiceInformationSection
+{
+    IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+}
+
 public interface IProgramMapSection : IServiceInformationSection
 {
     ushort ProgramNumber { get; }

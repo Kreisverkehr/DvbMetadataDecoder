@@ -1,6 +1,6 @@
 using Kreisverkehr.DvbMetadataDecoder;
 
-namespace DvbMetadataDecoder.Implementations.ServiceInformation;
+namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation;
 
 internal abstract class Descriptor : IServiceInformationDescriptor
 {

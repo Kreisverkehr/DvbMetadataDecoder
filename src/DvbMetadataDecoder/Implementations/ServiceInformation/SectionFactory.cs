@@ -1,6 +1,6 @@
 using System.Threading.Channels;
-using DvbMetadataDecoder.Implementations.ServiceInformation;
-using DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
+using Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation;
+using Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 

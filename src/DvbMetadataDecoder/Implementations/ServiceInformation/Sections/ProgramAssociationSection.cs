@@ -1,7 +1,7 @@
 using Kreisverkehr.DvbMetadataDecoder;
 using Kreisverkehr.DvbMetadataDecoder.Extensions;
 
-namespace DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
+namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
 
 internal class ProgramAssociationSection : Section, IProgramAssociationSection
 {
