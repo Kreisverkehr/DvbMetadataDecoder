@@ -1,5 +1,6 @@
 using Kreisverkehr.DvbMetadataDecoder;
 using Kreisverkehr.DvbMetadataDecoder.Extensions;
+using Kreisverkehr.DvbMetadataDecoder.Lookups;
 
 namespace Kreisverkehr.DvbMetadataDecoder.Implementations.ServiceInformation.Sections;
 
@@ -49,7 +50,7 @@ internal class ProgramMapSection : Section, IProgramMapSection
             Descriptor.AddDescriptors(data.Slice(5, esInfoLength), _descriptors);
         }
 
-        public byte StreamType => _streamType;
+        public StreamTypeInfo StreamType => StaticValues.StreamTypes[_streamType];
         public ushort ElementaryPid => _elementaryPid;
         public IReadOnlyCollection<IServiceInformationDescriptor> Descriptors => _descriptors.AsReadOnly();
     }

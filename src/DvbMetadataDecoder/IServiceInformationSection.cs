@@ -1,4 +1,5 @@
 using System.Dynamic;
+using Kreisverkehr.DvbMetadataDecoder.Lookups;
 
 namespace Kreisverkehr.DvbMetadataDecoder;
 
@@ -36,7 +37,7 @@ public interface IProgramMapSection : IServiceInformationSection
     IReadOnlyCollection<IEntry> Entries { get; }
     public interface IEntry
     {
-        byte StreamType { get; }
+        StreamTypeInfo StreamType { get; }
         ushort ElementaryPid { get; }
         IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
     }
