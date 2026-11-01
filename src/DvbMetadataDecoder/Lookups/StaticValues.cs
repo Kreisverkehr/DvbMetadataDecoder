@@ -1,8 +1,8 @@
 namespace Kreisverkehr.DvbMetadataDecoder.Lookups;
 
-public static class StaticValues
+internal static class StaticValues
 {
-    public static readonly Dictionary<byte, StreamTypeInfo> StreamTypes = new()
+    internal static readonly Dictionary<byte, StreamTypeInfo> StreamTypes = new()
     {
         [0x00] = new(0x00, "ITU-T | ISO/IEC Reserved", StreamCategory.Reserved),
         [0x01] = new(0x01, "ISO/IEC 11172-2 Video", StreamCategory.Video),
@@ -263,5 +263,25 @@ public static class StaticValues
         [0xFD] = new(0xFD, "User Private", StreamCategory.UserPrivate),
         [0xFE] = new(0xFE, "User Private", StreamCategory.UserPrivate),
         [0xFF] = new(0xFF, "User Private", StreamCategory.UserPrivate)
+    };
+
+    internal static readonly Dictionary<byte, string> HierarchyTypes = new()
+    {
+        [0x00] = "Reserved",
+        [0x01] = "Spatial Scalability",
+        [0x02] = "SNR Scalability",
+        [0x03] = "Temporal Scalability",
+        [0x04] = "Data Partitioning",
+        [0x05] = "Extension Bitstream",
+        [0x06] = "Private Stream",
+        [0x07] = "Multi-View Profile",
+        [0x08] = "Combined Scalability or MV-HEVC Sub-Partition",
+        [0x09] = "MVC or MVCD Video Sub-Bitstream",
+        [0x0A] = "Auxiliary picture layer as defined in Annex F of Rec. ITU-T H.265 | ISO/IEC 23008-2",
+        [0x0B] = "Reserved",
+        [0x0C] = "Reserved",
+        [0x0D] = "Reserved",
+        [0x0E] = "Reserved",
+        [0x0F] = "Base layer or MVC base view sub-bitstream or AVC video sub-bitstream of MVC or HEVC temporal video sub-bitstream or HEVC base sub-partition or Base layer of MVCD base view sub-bitstream or AVC video sub-bitstream of MVCD or VVC temporal video sub-bitstream or EVC temporal video sub-bitstream"
     };
 }
