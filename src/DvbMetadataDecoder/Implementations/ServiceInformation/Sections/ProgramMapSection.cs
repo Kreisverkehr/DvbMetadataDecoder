@@ -9,7 +9,7 @@ internal class ProgramMapSection : Section, IProgramMapSection
     private readonly ushort _pcrPid;
     private readonly ushort _programInfoLength;
     private readonly List<Descriptor> _descriptors = [];
-    private readonly List<Entry> _entries = [];
+    private readonly List<EsInfo> _esInfos = [];
 
     public ProgramMapSection(ReadOnlySpan<byte> data) : base(data)
     {
@@ -25,7 +25,7 @@ internal class ProgramMapSection : Section, IProgramMapSection
         while (startOfItem < bodyData.Length)
         {
             int itemLength = (ushort)(((bodyData[startOfItem + 3] & 0b00001111) << 8) | bodyData[startOfItem + 4]) + 5;
-            _entries.Add(new Entry(bodyData.Slice(startOfItem, itemLength)));
+            _esInfos.Add(new EsInfo(bodyData.Slice(startOfItem, itemLength)));
             startOfItem += itemLength;
         }
     }
@@ -33,15 +33,15 @@ internal class ProgramMapSection : Section, IProgramMapSection
     public ushort ProgramNumber { get; private set; }
     public ushort PcrPid => _pcrPid;
     public IReadOnlyCollection<IServiceInformationDescriptor> Descriptors => _descriptors.AsReadOnly();
-    public IReadOnlyCollection<IProgramMapSection.IEntry> Entries => _entries.AsReadOnly();
+    public IReadOnlyCollection<IProgramMapSection.IEsInfo> EsInfos => _esInfos.AsReadOnly();
 
-    private class Entry : IProgramMapSection.IEntry
+    private class EsInfo : IProgramMapSection.IEsInfo
     {
         private readonly byte _streamType;
         private readonly ushort _elementaryPid;
         private readonly List<Descriptor> _descriptors = [];
 
-        public Entry(ReadOnlySpan<byte> data)
+        public EsInfo(ReadOnlySpan<byte> data)
         {
             _streamType = data[0];
             _elementaryPid = (ushort)(((data[1] & 0b00011111) << 8) | data[2]);

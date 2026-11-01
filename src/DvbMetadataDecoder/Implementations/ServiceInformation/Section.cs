@@ -23,7 +23,7 @@ internal abstract class Section : IServiceInformationSection
         _lastSectionNumber = data[7];
     }
 
-    protected ReadOnlySpan<byte> GetDataPart(ReadOnlySpan<byte> data) => data[8..(_sectionLength - 1)];
+    protected ReadOnlySpan<byte> GetDataPart(ReadOnlySpan<byte> data) => data[8..(_sectionLength - 1)]; // sectionLength + 3 bytes header - 4 bytes crc
 
     public byte TableId => _tableId;
     public byte VersionNumber => _versionNumber;

@@ -34,8 +34,8 @@ public interface IProgramMapSection : IServiceInformationSection
     ushort ProgramNumber { get; }
     ushort PcrPid { get; }
     IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
-    IReadOnlyCollection<IEntry> Entries { get; }
-    public interface IEntry
+    IReadOnlyCollection<IEsInfo> EsInfos { get; }
+    public interface IEsInfo
     {
         StreamTypeInfo StreamType { get; }
         ushort ElementaryPid { get; }

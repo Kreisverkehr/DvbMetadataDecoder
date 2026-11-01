@@ -50,6 +50,18 @@ internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposa
             return;
         }
 
+        if(pid == 0x01 && tableId == 0x01)
+        {
+            await BroadcastNewSection(pid, new ConditionalAccessSection(sectionData.Span));
+            return;
+        }
+
+        if(pid == 0x02 && tableId == 0x03)
+        {
+            await BroadcastNewSection(pid, new TransportStreamDescriptionSection(sectionData.Span));
+            return;
+        }
+
         await BroadcastNewSection(pid, new UnknownSection(sectionData.Span));
     }
 

@@ -39,6 +39,16 @@ while (await sectionReader.WaitToReadAsync() && sectionReader.TryRead(out var se
     {
         Console.WriteLine("ProgramMap found");
     }
+
+    if(section is ITransportStreamDescriptionSection tsdSection)
+    {
+        Console.WriteLine("TS Description found");
+    }
+
+    if(section is IConditionalAccessSection caSection)
+    {
+        Console.WriteLine("CA Section found");
+    }
 }
 
 await feederTask;
