@@ -47,3 +47,16 @@ public interface ITransportStreamDescriptionSection : IServiceInformationSection
 {
     IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
 }
+
+public interface INetworkInformationSection : IServiceInformationSection
+{
+    ushort NetworkId { get; }
+    IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+    IReadOnlyCollection<INetworkInfo> NetworkInfos { get; }
+    public interface INetworkInfo
+    {
+        ushort TransportStreamId { get; }
+        ushort OriginalNetworkId { get; }
+        IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+    }
+}

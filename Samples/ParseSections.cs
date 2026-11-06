@@ -35,19 +35,24 @@ while (await sectionReader.WaitToReadAsync() && sectionReader.TryRead(out var se
         Console.WriteLine($"Associations: {string.Join(", ", patSection.PidAssociations)}");
     }
 
+    if(section is INetworkInformationSection nitSection)
+    {
+        Console.WriteLine($"NIT found! TableId = {nitSection.TableId:X2}, NetworkId = {nitSection.NetworkId:X4}");
+    }
+
     if(section is IProgramMapSection pmtSection)
     {
-        Console.WriteLine("ProgramMap found");
+        Console.WriteLine($"ProgramMap found! TableId = {pmtSection.TableId:X2}, ProgramNumber = {pmtSection.ProgramNumber:X4}, PCR PID = {pmtSection.PcrPid:X4}");
     }
 
     if(section is ITransportStreamDescriptionSection tsdSection)
     {
-        Console.WriteLine("TS Description found");
+        Console.WriteLine($"TS Description found! TableId = {tsdSection.TableId:X2}");
     }
 
     if(section is IConditionalAccessSection caSection)
     {
-        Console.WriteLine("CA Section found");
+        Console.WriteLine($"CA Section found! TableId = {caSection.TableId:X2}");
     }
 }
 

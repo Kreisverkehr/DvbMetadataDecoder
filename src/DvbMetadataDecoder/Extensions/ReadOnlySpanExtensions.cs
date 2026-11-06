@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Kreisverkehr.DvbMetadataDecoder.Extensions;
 
 public static class ReadOnlySpanExtensions
@@ -5,6 +7,31 @@ public static class ReadOnlySpanExtensions
     public static ReadOnlySpanChunks<T> Chunk<T>(this ReadOnlySpan<T> source, int chunkSize)
     {
         return new ReadOnlySpanChunks<T>(source, chunkSize);
+    }
+
+    public static void DumpHex(this ReadOnlySpan<byte> data, int bytesPerLine = 16)
+    {
+        var sb = new StringBuilder();
+        for (int offset = 0; offset < data.Length; offset += bytesPerLine)
+        {
+            sb.Clear();
+            sb.AppendFormat("{0:X8}  ", offset);
+
+            for (int i = 0; i < bytesPerLine; i++)
+            {
+                if (offset + i < data.Length) sb.AppendFormat("{0:X2} ", data[offset + i]);
+                else sb.Append("   ");
+
+                if ((i + 1) % 4 == 0) sb.Append(" ");
+            }
+
+            for (int i = 0; i < bytesPerLine; i++)
+                sb.Append(offset + i < data.Length && data[offset + i] >= 32 && data[offset + i] <= 126
+                    ? (char)data[offset + i]
+                    : '.');
+
+            Console.WriteLine(sb);
+        }
     }
 }
 
