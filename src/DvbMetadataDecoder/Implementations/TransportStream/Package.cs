@@ -34,7 +34,7 @@ internal class Package : ITransportStreamPackage
         bool hasAdaptationField = (_adaptationFieldControl & 0b10) != 0;
         if (hasAdaptationField)
         {
-            payloadStartIndex += data[4];
+            payloadStartIndex += data[4] + 1;
             AdaptationField = new AdaptationField(data.Slice(5, data[4]));
         }
 
