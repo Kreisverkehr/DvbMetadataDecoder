@@ -5,6 +5,7 @@ internal sealed class SectionAssembler
     private readonly List<byte> _partialSection = [];
 
     private readonly Action<byte[]> _onSection;
+    private byte? _lastPayloadContinuityCounter;
 
     internal SectionAssembler(Action<byte[]> onSection)
     {
@@ -13,8 +14,38 @@ internal sealed class SectionAssembler
 
     public void Process(ITransportStreamPackage package)
     {
+        if (package.TransportErrorIndicator || package.IsScrambled)
+        {
+            Reset();
+            return;
+        }
+
+        if (package.AdaptationField?.DiscontinuityIndicator == true)
+        {
+            Reset();
+        }
+
         if(package.Payload?.IsEmpty ?? true)
             return;
+
+        var continuityCounter = package.ContinuityCounter;
+        if (_lastPayloadContinuityCounter is byte previousCounter)
+        {
+            if (continuityCounter == previousCounter)
+                return;
+
+            if (continuityCounter != ((previousCounter + 1) & 0x0f))
+            {
+                _partialSection.Clear();
+                if (!package.PayloadUnitStartIndicator)
+                {
+                    _lastPayloadContinuityCounter = continuityCounter;
+                    return;
+                }
+            }
+        }
+
+        _lastPayloadContinuityCounter = continuityCounter;
 
         var payload = package.Payload.Value.Span;
 
@@ -56,7 +87,7 @@ internal sealed class SectionAssembler
                 var expectedLength = 3 + (((_partialSection[1] & 0x0f) << 8) | _partialSection[2]);
                 if (_partialSection.Count == expectedLength)
                 {
-                    _onSection(_partialSection.ToArray());
+                    EmitSection(_partialSection.ToArray());
                     _partialSection.Clear();
                     return;
                 }
@@ -85,8 +116,45 @@ internal sealed class SectionAssembler
                 return;
             }
 
-            _onSection(payload.Slice(offset, sectionLength).ToArray());
+            EmitSection(payload.Slice(offset, sectionLength).ToArray());
             offset += sectionLength;
         }
+    }
+
+    private void EmitSection(byte[] section)
+    {
+        if (HasValidCrc(section))
+            _onSection(section);
+    }
+
+    private static bool HasValidCrc(ReadOnlySpan<byte> section)
+    {
+        if (section.Length < 3)
+            return false;
+
+        var tableHasCrc = (section[1] & 0x80) != 0 || section[0] == 0x73;
+        if (!tableHasCrc)
+            return true;
+
+        if (section.Length < 7)
+            return false;
+
+        uint crc = 0xffffffff;
+        foreach (var value in section)
+        {
+            crc ^= (uint)value << 24;
+            for (var bit = 0; bit < 8; bit++)
+                crc = (crc & 0x80000000) != 0
+                    ? (crc << 1) ^ 0x04c11db7
+                    : crc << 1;
+        }
+
+        return crc == 0;
+    }
+
+    private void Reset()
+    {
+        _partialSection.Clear();
+        _lastPayloadContinuityCounter = null;
     }
 }
