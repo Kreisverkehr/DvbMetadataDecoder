@@ -60,3 +60,22 @@ public interface INetworkInformationSection : IServiceInformationSection
         IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
     }
 }
+
+public interface IEventInformationSection : IServiceInformationSection
+{
+    ushort ServiceId { get; }
+    ushort TransportStreamId { get; }
+    ushort OriginalNetworkId { get; }
+    byte SegmentLastSectionNumber { get; }
+    byte LastTableId { get; }
+    IReadOnlyCollection<IEventInformation> Events { get; }
+    public interface IEventInformation
+    {
+        ushort EventId { get; }
+        DateTime? StartTime { get; }
+        TimeSpan Duration { get; }
+        RunningStatus RunningStatus { get; }
+        bool FreeCaMode { get; }
+        IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+    }
+}
