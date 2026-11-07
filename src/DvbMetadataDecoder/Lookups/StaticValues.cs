@@ -284,4 +284,45 @@ internal static class StaticValues
         [0x0E] = "Reserved",
         [0x0F] = "Base layer or MVC base view sub-bitstream or AVC video sub-bitstream of MVC or HEVC temporal video sub-bitstream or HEVC base sub-partition or Base layer of MVCD base view sub-bitstream or AVC video sub-bitstream of MVCD or VVC temporal video sub-bitstream or EVC temporal video sub-bitstream"
     };
+
+    public static readonly Dictionary<byte, DvbServiceTypeInfo> ServiceTypes = new()
+    {
+        [0x00] = new("reserved for future use"),
+        [0x01] = new("digital television service", HasVideo: true, HasAudio: true),
+        [0x02] = new("digital radio sound service", HasAudio: true, IsRadio: true),
+        [0x03] = new("teletext service", IsTeletext: true),
+        [0x04] = new("NVOD reference service", HasVideo: true, HasAudio: true),
+        [0x05] = new("NVOD time-shifted service", HasVideo: true, HasAudio: true),
+        [0x06] = new("mosaic service"),
+        [0x07] = new("Frequency Modulation (FM) radio service", HasAudio: true, IsRadio: true),
+        [0x08] = new("DVB SRM service"),
+        [0x09] = new("reserved for future use"),
+        [0x0A] = new("advanced codec digital radio sound service", HasAudio: true, IsRadio: true),
+        [0x0B] = new("H.264/AVC mosaic service", VideoCodec: "H.264/AVC"),
+        [0x0C] = new("data broadcast service"),
+        [0x0D] = new("reserved for Common Interface (CI) usage"),
+        [0x0E] = new("RCS Map"),
+        [0x0F] = new("RCS Forward Link Signalling (FLS)"),
+        [0x10] = new("DVB Multimedia Home Platform (MHP) service"),
+        [0x11] = new("HD digital television service", HasVideo: true, HasAudio: true, IsHD: true),
+        [0x12] = new("reserved for future use"),
+        [0x13] = new("reserved for future use"),
+        [0x14] = new("reserved for future use"),
+        [0x15] = new("reserved for future use"),
+        [0x16] = new("H.264/AVC SD digital television service", HasVideo: true, HasAudio: true, VideoCodec: "H.264/AVC"),
+        [0x17] = new("H.264/AVC SD NVOD time-shifted service", HasVideo: true, HasAudio: true, VideoCodec: "H.264/AVC"),
+        [0x18] = new("H.264/AVC SD NVOD reference service", HasVideo: true, HasAudio: true, VideoCodec: "H.264/AVC"),
+        [0x19] = new("H.264/AVC HD digital television service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1A] = new("H.264/AVC HD NVOD time-shifted service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1B] = new("H.264/AVC HD NVOD reference service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1C] = new("H.264/AVC frame compatible plano-stereoscopic HD digital television service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1D] = new("H.264/AVC frame compatible plano-stereoscopic HD NVOD time-shifted service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1E] = new("H.264/AVC frame compatible plano-stereoscopic HD NVOD reference service", HasVideo: true, HasAudio: true, IsHD: true, VideoCodec: "H.264/AVC"),
+        [0x1F] = new("HEVC digital television service", HasVideo: true, HasAudio: true, VideoCodec: "HEVC"),
+        [0x20] = new("HEVC UHD digital television service", HasVideo: true, HasAudio: true, IsHD: true, IsUHD: true, VideoCodec: "HEVC"),
+        [0x21] = new("VVC digital television service", HasVideo: true, HasAudio: true, VideoCodec: "VVC"),
+        [0x22] = new("AVS3 digital television service", HasVideo: true, HasAudio: true, VideoCodec: "AVS3"),
+        [0x23] = new("reserved for future use"),
+        [0xFF] = new("reserved for future use")
+    };
 }

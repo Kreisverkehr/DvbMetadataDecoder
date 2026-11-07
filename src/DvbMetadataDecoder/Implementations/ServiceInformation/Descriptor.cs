@@ -53,6 +53,17 @@ internal abstract class Descriptor : IServiceInformationDescriptor
         0x12 => new IbpDescriptor(data),
         0x1B => new Mpeg4VideoDescriptor(data),
         0x1C => new Mpeg4AudioDescriptor(data),
+
+        0x40 => new NetworkNameDescriptor(data),
+        0x41 => new ServiceListDescriptor(data),
+        0x4D => new ShortEventDescriptor(data),
+        0x4E => new ExtendedEventDescriptor(data),
+        0x50 => new ComponentDescriptor(data),
+        0x5B => new MultilingualNetworkNameDescriptor(data),
+        0x5C => new MultilingualBouquetNameDescriptor(data),
+        0x5D => new MultilingualServiceNameDescriptor(data),
+        0x5E => new MultilingualComponentNameDescriptor(data),
+
         _ => new UnknownDescriptor(data)
     };
 }

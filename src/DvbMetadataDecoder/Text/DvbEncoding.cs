@@ -140,6 +140,6 @@ public sealed class DvbEncoding : Encoding
 
     private static string Trim(string value)
     {
-        return value.TrimEnd('\0', ' ');
+        return value.Replace("\u008A", Environment.NewLine).TrimEnd('\0', ' ');
     }
 }

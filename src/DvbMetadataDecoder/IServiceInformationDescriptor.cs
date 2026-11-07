@@ -1,3 +1,6 @@
+using System.Dynamic;
+using Kreisverkehr.DvbMetadataDecoder.Lookups;
+
 namespace Kreisverkehr.DvbMetadataDecoder;
 
 public interface IServiceInformationDescriptor
@@ -148,4 +151,92 @@ public interface IMpeg4VideoDescriptor : IMpeg4Descriptor
 public interface IMpeg4AudioDescriptor : IMpeg4Descriptor
 {
     byte AudioProfileAndLevel { get; }
+}
+
+public interface INetworkNameDescriptor : IServiceInformationDescriptor
+{
+    string Text { get; }
+}
+
+public interface IServiceListDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IServiceListEntry> Services { get; }
+    public interface IServiceListEntry
+    {
+        ushort ServiceId { get; }
+        byte ServiceType { get; }
+        DvbServiceTypeInfo? Info { get; }
+    }
+}
+
+public interface IShortEventDescriptor : IServiceInformationDescriptor
+{
+    string Iso639Code { get; }
+    string Name { get; }
+    string Text { get; }
+}
+
+public interface IExtendedEventDescriptor : IServiceInformationDescriptor
+{
+    ushort DescriptorNo { get; }
+    ushort LastDescriptorNo { get; }
+    string Iso639Code { get; }
+    IReadOnlyCollection<IExtendedEventItem> Items { get; }
+    string Text { get; }
+    public interface IExtendedEventItem
+    {
+        string Description { get; }
+        string Text { get; }
+    }
+}
+
+public interface IComponentDescriptor : IServiceInformationDescriptor
+{
+    byte StreamContentExt { get; }
+    byte StreamContent { get; }
+    byte ComponentType { get; }
+    byte ComponentTag { get; }
+    string Iso639Code { get; }
+    string Description { get; }
+}
+
+public interface IMultilingualNetworkNameDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IMultilingualNetworkName> NetworkNames { get; }
+    public interface IMultilingualNetworkName
+    {
+        string Iso639Code { get; }
+        string Text { get; }
+    }
+}
+
+public interface IMultilingualBouquetNameDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IMultilingualBouquetName> BouquetNames { get; }
+    public interface IMultilingualBouquetName
+    {
+        string Iso639Code { get; }
+        string Text { get; }
+    }
+}
+
+public interface IMultilingualServiceNameDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IMultilingualServiceName> ServiceNames { get; }
+    public interface IMultilingualServiceName
+    {
+        string Iso639Code { get; }
+        string ServiceProviderName { get; }
+        string ServiceName { get; }
+    }
+}
+
+public interface IMultilingualComponentNameDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IMultilingualComponentName> ComponentNames { get; }
+    public interface IMultilingualComponentName
+    {
+        string Iso639Code { get; }
+        string Text { get; }
+    }
 }
