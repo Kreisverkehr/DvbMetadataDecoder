@@ -5,23 +5,29 @@ streams.
 
 ## Motivation
 
-This repository starts a clean, independent implementation instead of continuing
-the existing TsDecoder fork. The fork has become difficult to reason about, which
-makes locating and fixing bugs unnecessarily hard. A small, clearly structured
-codebase should make the decoder easier to understand, test, and improve.
+This repository is a clean, independent implementation rather than a continuation
+of the existing TsDecoder fork. It aims to keep the decoder understandable and
+straightforward to improve.
 
 ## Project status
 
-This project is at its initial scaffolding stage. It currently contains an empty
-.NET library project and repository setup only. No decoder implementation, public
-API, or samples are available yet; those will be designed as the project develops.
+The library currently decodes MPEG transport stream packets and selected Service
+Information (SI) sections. It includes parsing for PAT, PMT, CAT, TSD, NIT, and
+EIT sections, section CRC checking, transport packet adaptation fields, and DVB
+text decoding. A growing set of MPEG-2 and DVB descriptors is also available.
 
-The project is a work in progress. APIs and behavior may change, and it is not
-ready for production use.
+This is an early work in progress: protocol and descriptor coverage is incomplete,
+and APIs and behavior may change. It is not yet ready for production use.
+
+## Samples
+
+The [Samples](Samples/README.md) directory contains scripts for inspecting
+transport stream packets and decoded SI sections. They require a transport stream
+capture at `Samples/testdata.ts`; captures are not included in the repository.
 
 ## Requirements
 
-- .NET 10 SDK
+- .NET 10 SDK (including support for file-based C# apps to run the samples)
 
 ## Build
 
@@ -29,6 +35,13 @@ From the repository root:
 
 ```sh
 dotnet build
+```
+
+Run the sample scripts from the repository root:
+
+```sh
+dotnet run Samples/ParsePackages.cs
+dotnet run Samples/ParseSections.cs
 ```
 
 ## License
