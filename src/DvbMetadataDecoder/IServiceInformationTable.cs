@@ -4,6 +4,7 @@ public interface IServiceInformationTable;
 
 public interface IProgramAssociationTable : IServiceInformationTable
 {
+    ushort TransportStreamId { get; }
     byte VersionNumber { get; }
     IReadOnlyCollection<ushort> NetworkPids { get; }
     IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations { get; }

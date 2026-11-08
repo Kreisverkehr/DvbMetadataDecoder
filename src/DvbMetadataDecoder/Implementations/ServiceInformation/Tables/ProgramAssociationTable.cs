@@ -10,7 +10,7 @@ internal class ProgramAssociationTable : IProgramAssociationTable, IAsyncDisposa
     private readonly CancellationTokenSource _shutdown = new();
     private readonly Dictionary<byte, IProgramAssociationSection> _candidateSections = [];
     private (ushort TransportStreamId, byte VersionNumber, byte LastSectionNumber)? _candidate;
-    private volatile PublishedPat _published = new(0, [], []);
+    private volatile PublishedPat _published = new(0, 0, [], []);
 
     public ProgramAssociationTable(IServiceInformationSectionFactory sectionFactory)
     {
@@ -51,13 +51,12 @@ internal class ProgramAssociationTable : IProgramAssociationTable, IAsyncDisposa
                 var networkPids = sections.SelectMany(candidateSection => candidateSection.NetworkPids).ToArray();
                 var pidAssociations = sections.SelectMany(candidateSection => candidateSection.PidAssociations).ToArray();
 
-                _published = new(
-                    patSection.VersionNumber,
-                    Array.AsReadOnly(networkPids),
-                    Array.AsReadOnly(pidAssociations));
+                _published = new(patSection.TransportStreamId, patSection.VersionNumber, Array.AsReadOnly(networkPids), Array.AsReadOnly(pidAssociations));
             }
         }
     }
+
+    public ushort TransportStreamId => _published.TransportStreamId;
 
     public byte VersionNumber => _published.VersionNumber;
 
@@ -83,5 +82,5 @@ internal class ProgramAssociationTable : IProgramAssociationTable, IAsyncDisposa
         }
     }
 
-    private sealed record PublishedPat(byte VersionNumber, IReadOnlyCollection<ushort> NetworkPids, IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations);
+    private sealed record PublishedPat(ushort TransportStreamId, byte VersionNumber, IReadOnlyCollection<ushort> NetworkPids, IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations);
 }
