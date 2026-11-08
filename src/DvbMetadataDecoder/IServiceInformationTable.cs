@@ -9,3 +9,13 @@ public interface IProgramAssociationTable : IServiceInformationTable
     IReadOnlyCollection<(ushort ProgramNumber, ushort ProgramMapPid)> PidAssociations { get; }
     IEnumerable<ushort> ProgramMapPids { get; }
 }
+
+public interface IProgramMapTable : IServiceInformationTable
+{
+    ushort ProgramMapPid { get; }
+    ushort ProgramNumber { get; }
+    byte VersionNumber { get; }
+    ushort PcrPid { get; }
+    IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+    IReadOnlyCollection<IProgramMapSection.IEsInfo> ElementaryStreams { get; }
+}
