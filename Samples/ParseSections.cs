@@ -15,7 +15,7 @@ await using var scope = sp.CreateAsyncScope();
 var decoder = scope.ServiceProvider.GetRequiredService<IDvbMetadataDecoder>();
 var sectionReader = scope.ServiceProvider.GetRequiredService<IServiceInformationSectionFactory>().Subscribe();
 
-ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync("Samples/testdata.ts");
+ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync("Samples/completemultiplex.ts");
 // data = data[..(10000 * 188)];
 var feederTask = decoder.FeedAsync(data).AsTask().ContinueWith(async _ =>
     {

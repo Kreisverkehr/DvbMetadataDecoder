@@ -14,14 +14,16 @@ await using var scope = sp.CreateAsyncScope();
 var decoder = scope.ServiceProvider.GetRequiredService<IDvbMetadataDecoder>();
 var pkgReader = scope.ServiceProvider.GetRequiredService<ITransportStreamPackageFactory>().Subscribe();
 
-ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync("Samples/testdata.ts");
+ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync("Samples/completemultiplex.ts");
 data = data[..(1000 * 188)];
 var feedTask = decoder.FeedAsync(data);
 
+HashSet<int> pidsFound = [];
 var packageCount = data.Length / 188;
 for (var index = 0; index < packageCount; index++)
 {
     var package = await pkgReader.ReadAsync();
+    pidsFound.Add(package.PacketIdentifier);
     Console.WriteLine(
         $"Packet {index + 1:00000000}: PID=0x{package.PacketIdentifier:X4} ({package.PacketIdentifier}), " +
         $"TEI={package.TransportErrorIndicator}, " +
@@ -59,5 +61,8 @@ for (var index = 0; index < packageCount; index++)
         }
     }
 }
+
+foreach (var i in pidsFound.Order())
+    Console.WriteLine($"{i:X4} ({i})");
 
 await feedTask;
