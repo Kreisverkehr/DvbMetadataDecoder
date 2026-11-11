@@ -34,8 +34,14 @@ internal class Package : ITransportStreamPackage
         bool hasAdaptationField = (_adaptationFieldControl & 0b10) != 0;
         if (hasAdaptationField)
         {
-            payloadStartIndex += data[4] + 1;
-            AdaptationField = new AdaptationField(data.Slice(5, data[4]));
+            byte adaptationFieldLen = data[4];
+            payloadStartIndex += adaptationFieldLen + 1;
+
+            // apparently a package can claim to have an adaptationfield and then set it's 
+            // length to zero. This is done when stuffing of a single byte is needed to align 
+            // the payload to the 188 byte packet size
+            if (adaptationFieldLen > 0)
+                AdaptationField = new AdaptationField(data.Slice(5, data[4]));
         }
 
         if (hasPayload)

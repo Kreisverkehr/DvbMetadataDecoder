@@ -14,7 +14,7 @@ await using var scope = sp.CreateAsyncScope();
 var decoder = scope.ServiceProvider.GetRequiredService<IDvbMetadataDecoder>();
 var metadataRepository = scope.ServiceProvider.GetRequiredService<IDvbMetadataRepository>();
 
-ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync(@"C:\temp\completemultiplex.ts");
+ReadOnlyMemory<byte> data = await File.ReadAllBytesAsync(@"Samples/completemultiplex.ts");
 var feedTask = decoder.FeedAsync(data);
 
 
