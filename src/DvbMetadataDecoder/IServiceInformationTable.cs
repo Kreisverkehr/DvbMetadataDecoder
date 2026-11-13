@@ -30,6 +30,15 @@ public interface IEventInformationTable : IServiceInformationTable
     IReadOnlyCollection<IEventInformationSection.IEventInformation> Events { get; }
 }
 
+public interface IServiceDescriptionTable : IServiceInformationTable
+{
+    byte TableId { get; }
+    ushort TransportStreamId { get; }
+    ushort OriginalNetworkId { get; }
+    byte VersionNumber { get; }
+    IReadOnlyCollection<IServiceDescriptionSection.IServiceDescription> Services { get; }
+}
+
 public interface IEventInformationSubtable
 {
     byte TableId { get; }

@@ -240,3 +240,11 @@ public interface IMultilingualComponentNameDescriptor : IServiceInformationDescr
         string Text { get; }
     }
 }
+
+public interface IServiceDescriptor : IServiceInformationDescriptor
+{
+    byte ServiceType { get; }
+    string ServiceProviderName { get; }
+    string ServiceName { get; }
+    public DvbServiceTypeInfo? ServiceInfo { get; }
+}

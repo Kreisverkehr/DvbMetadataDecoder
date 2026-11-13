@@ -68,6 +68,12 @@ internal class SectionFactory : IServiceInformationSectionFactory, IAsyncDisposa
             return;
         }
 
+        if(pid == 0x11 && (tableId == 0x42 || tableId == 0x46))
+        {
+            await BroadcastNewSection(pid, new ServiceDescriptionSection(sectionData.Span));
+            return;
+        }
+
         if(pid == 0x12 && tableId >= 0x4E && tableId <= 0x6F)
         {
             await BroadcastNewSection(pid, new EventInformationSection(sectionData.Span));

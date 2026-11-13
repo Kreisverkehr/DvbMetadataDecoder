@@ -79,3 +79,21 @@ public interface IEventInformationSection : IServiceInformationSection
         IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
     }
 }
+
+public interface IServiceDescriptionSection : IServiceInformationSection
+{
+    ushort TransportStreamId { get; }
+    ushort OriginalNetworkId { get; }
+
+    IReadOnlyCollection<IServiceDescription> Services { get; }
+
+    public interface IServiceDescription
+    {
+        ushort ServiceId { get; }
+        bool HasEitSchedule { get; }
+        bool HasEitPresentFollowing { get; }
+        RunningStatus RunningStatus { get; }
+        bool FreeCaMode { get; }
+        IReadOnlyCollection<IServiceInformationDescriptor> Descriptors { get; }
+    }
+}

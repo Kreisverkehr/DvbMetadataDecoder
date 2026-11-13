@@ -18,17 +18,17 @@ internal sealed class EventInformationTableCollector : IAsyncDisposable
         _worker = ProcessSections(_shutdown.Token);
     }
 
-    public IReadOnlyCollection<IEventInformationTable> PresentFollowingActualTransportStreamTables =>
-        _published.PresentFollowingActualTransportStreamTables;
+    public IReadOnlyCollection<IEventInformationTable> ActualTransportStreamPresentFollowingEventInformationTables =>
+        _published.ActualTransportStreamPresentFollowingEventInformationTables;
 
-    public IReadOnlyCollection<IEventInformationTable> PresentFollowingOtherTransportStreamTables =>
-        _published.PresentFollowingOtherTransportStreamTables;
+    public IReadOnlyCollection<IEventInformationTable> OtherTransportStreamPresentFollowingEventInformationTables =>
+        _published.OtherTransportStreamPresentFollowingEventInformationTables;
 
-    public IReadOnlyCollection<IEventInformationTable> ScheduleActualTransportStreamTables =>
-        _published.ScheduleActualTransportStreamTables;
+    public IReadOnlyCollection<IEventInformationTable> ActualTransportStreamScheduleEventInformationTables =>
+        _published.ActualTransportStreamScheduleEventInformationTables;
 
-    public IReadOnlyCollection<IEventInformationTable> ScheduleOtherTransportStreamTables =>
-        _published.ScheduleOtherTransportStreamTables;
+    public IReadOnlyCollection<IEventInformationTable> OtherTransportStreamScheduleEventInformationTables =>
+        _published.OtherTransportStreamScheduleEventInformationTables;
 
     private async Task ProcessSections(CancellationToken cancellationToken)
     {
@@ -236,9 +236,9 @@ internal sealed class EventInformationTableCollector : IAsyncDisposable
     }
 
     private sealed record PublishedTables(
-        IReadOnlyCollection<IEventInformationTable> PresentFollowingActualTransportStreamTables,
-        IReadOnlyCollection<IEventInformationTable> PresentFollowingOtherTransportStreamTables,
-        IReadOnlyCollection<IEventInformationTable> ScheduleActualTransportStreamTables,
-        IReadOnlyCollection<IEventInformationTable> ScheduleOtherTransportStreamTables
+        IReadOnlyCollection<IEventInformationTable> ActualTransportStreamPresentFollowingEventInformationTables,
+        IReadOnlyCollection<IEventInformationTable> OtherTransportStreamPresentFollowingEventInformationTables,
+        IReadOnlyCollection<IEventInformationTable> ActualTransportStreamScheduleEventInformationTables,
+        IReadOnlyCollection<IEventInformationTable> OtherTransportStreamScheduleEventInformationTables
     );
 }

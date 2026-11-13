@@ -56,6 +56,7 @@ internal abstract class Descriptor : IServiceInformationDescriptor
 
         0x40 => new NetworkNameDescriptor(data),
         0x41 => new ServiceListDescriptor(data),
+        0x48 => new ServiceDescriptor(data),
         0x4D => new ShortEventDescriptor(data),
         0x4E => new ExtendedEventDescriptor(data),
         0x50 => new ComponentDescriptor(data),

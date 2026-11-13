@@ -35,6 +35,11 @@ while (await sectionReader.WaitToReadAsync() && sectionReader.TryRead(out var se
         Console.WriteLine($"Associations: {string.Join(", ", patSection.PidAssociations)}");
     }
 
+    if(section is IServiceDescriptionSection sdtSection)
+    {
+        Console.WriteLine($"SDT found!");
+    }
+
     if(section is IEventInformationSection eitSection)
     {
         Console.WriteLine($"EIT found!");
