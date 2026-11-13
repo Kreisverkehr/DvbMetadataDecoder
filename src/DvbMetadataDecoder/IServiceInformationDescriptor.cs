@@ -248,3 +248,14 @@ public interface IServiceDescriptor : IServiceInformationDescriptor
     string ServiceName { get; }
     public DvbServiceTypeInfo? ServiceInfo { get; }
 }
+
+public interface IContentDescriptor : IServiceInformationDescriptor
+{
+    IReadOnlyCollection<IContentType> ContentTypes { get; }
+    public interface IContentType
+    {
+        byte Level1Type { get; }
+        byte Level2Type { get; }
+        byte UserByte { get; }
+    }
+}
